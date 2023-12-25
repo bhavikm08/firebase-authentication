@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flutter Firebase Auth</string>
+    <string name="facebook_app_id">249018721512636</string>
+    <string name="fb_login_protocol_scheme">fb249018721512636</string>
+    <string name="facebook_client_token">6f13701c02fcec0768486e59e2bb5957</string>
+</resources>
