@@ -58,8 +58,6 @@ class LoginProvider extends ChangeNotifier{
       }
     }
   }
-
-
   Future<void> signInWithFacebook({required BuildContext context}) async {
     print('out try Part ');
     try {
@@ -90,7 +88,7 @@ class LoginProvider extends ChangeNotifier{
       print("Error during Facebook login: $e");
     }
   }
-  Future<void> signInWithGoogle({required BuildContext context}) async {
+  Future<void> signInWithGoogle1({required BuildContext context}) async {
     EasyLoading.show(status: 'Signing in...'); // Show loading indicator
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     if (googleUser != null) {
@@ -121,6 +119,50 @@ class LoginProvider extends ChangeNotifier{
       throw "Google sign-in failed";
     }
   }
+  Future<void> signInWithGoogle({required BuildContext context}) async {
+    EasyLoading.show(status: 'Signing in...');
+
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile', 'openid'],
+        forceCodeForRefreshToken: true,
+      signInOption: SignInOption.standard
+    );
+
+    try {
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleUser.authentication;
+
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken, // Ensure ID token is retrieved
+        );
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool(StringConstant.isLogin, true);
+
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) => const Home(),
+        ));
+
+        print("GoogleUser :: > $googleUser");
+        print("credential :: > ${credential.signInMethod}");
+        print("AccessToken :: > ${googleSignInAuthentication.accessToken}");
+        print("idToken :: > ${googleSignInAuthentication.idToken}");
+
+        await FirebaseAuth.instance.signInWithCredential(credential);
+      } else {
+        throw "Google sign-in failed";
+      }
+    } catch (e) {
+      EasyLoading.dismiss();
+      print("Error during sign-in: $e");
+    } finally {
+      EasyLoading.dismiss(); // Ensure loading indicator is dismissed
+    }
+  }
+
   Future<void>signInFB()async{
     final FacebookLogin fb = FacebookLogin();
 
@@ -141,7 +183,6 @@ class LoginProvider extends ChangeNotifier{
       print('Login failed: ${result.error}');
     }
   }
-
   Future<void> loginWithFacebook() async {
     // Create a new FacebookAuth instance.
     final FacebookAuth facebookAuth = FacebookAuth.i;
@@ -160,6 +201,4 @@ class LoginProvider extends ChangeNotifier{
       // An error occurred while logging in.
     }
   }
-
-
 }

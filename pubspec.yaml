@@ -30,17 +30,17 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  cupertino_icons:
   shared_preferences:
   firebase_core:
   firebase_auth:
-  flutter_facebook_auth: ^6.0.2
-  flutter_login_facebook: ^1.9.0
+  flutter_facebook_auth:
+  flutter_login_facebook:
   tuple:
   provider:
-  google_sign_in: ^6.1.5
+  google_sign_in:
   flutter_easyloading:
-  intl_phone_field: ^3.1.0
+  intl_phone_field:
   webview_flutter:
 
 
